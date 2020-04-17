@@ -5,26 +5,48 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour
 {
+    // Speed på playermodels fart
     [SerializeField] float runSpeed = 5f;
+    // Speed på jumps
     [SerializeField] float jumpSpeed = 5f;
-    [SerializeField] int maxJump = 2;
-    [SerializeField] float dashSpeed = 1.5f;
+    //Speed på dash/slider
+    [SerializeField] float dashSpeed = 0.8f;
+    // timer til dash/slider
     [SerializeField] float slideTimer = 0f;
-    [SerializeField] float slideTimerMax = 1f;
+    // max timer til dash/slider
+    [SerializeField] float slideTimerMax = 0.2f;
 
  
 
     Rigidbody2D myRigidbody;
     Animator myAnimator;
+    Collider2D myCollider2D;
 
+    // bool til dash/sliding
     bool sliding = false;
-    public bool canDoubleJump;
+
+
+    //bool og variable der tjekker, om playermodellen rør "jorden"
+    bool isGrounded;
+    public Transform groundCheck;
+
+
+    public float checkRadius;
+    public LayerMask whatIsGround;
+    public float jumpForce;
+
+    // Extra jumps
+    private int extraJumps;
+    public int extraJumpsValue;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        extraJumps = extraJumpsValue;
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
+        myCollider2D = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -34,6 +56,8 @@ public class Player : MonoBehaviour
         flipSprite();
         Jump();
         dashSlide();
+
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
     }
 
     private void Run()
@@ -48,10 +72,18 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (CrossPlatformInputManager.GetButtonDown("Jump"))
+        if(isGrounded == true)
         {
-            Vector2 jumpVelocityToAdd = new Vector2(0f, jumpSpeed);
-            myRigidbody.velocity += jumpVelocityToAdd;
+            extraJumps = extraJumpsValue;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space) && extraJumps > 0)
+        {
+            myRigidbody.velocity = Vector2.up * jumpForce;
+            extraJumps--;
+        } else if (Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isGrounded == true)
+        {
+            myRigidbody.velocity = Vector2.up * jumpForce;
         }
     }
 
