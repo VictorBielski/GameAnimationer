@@ -6,9 +6,7 @@ using UnityStandardAssets.CrossPlatformInput;
 public class Player : MonoBehaviour
 {
     // Speed på playermodels fart
-    [SerializeField] float runSpeed = 5f;
-    // Speed på jumps
-    [SerializeField] float jumpSpeed = 5f;
+    [SerializeField] float runSpeed = 7f;
     //Speed på dash/slider
     [SerializeField] float dashSpeed = 0.8f;
     // timer til dash/slider
@@ -34,6 +32,9 @@ public class Player : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsGround;
     public float jumpForce;
+
+    // Jump-smash
+    public bool gravitySwitch;
 
     // Extra jumps
     private int extraJumps;
@@ -72,20 +73,37 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if(isGrounded == true)
+        bool playerIsJumping = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
+        if (isGrounded == true)
         {
             extraJumps = extraJumpsValue;
+            myAnimator.SetBool("isJumping", false);
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && extraJumps > 0)
+        if (Input.GetKeyDown(KeyCode.Space) && extraJumps > 0)
         {
+            myAnimator.SetBool("isJumping", playerIsJumping);
             myRigidbody.velocity = Vector2.up * jumpForce;
             extraJumps--;
-        } else if (Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isGrounded == true)
+        }
+        else if (Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isGrounded == true)
         {
             myRigidbody.velocity = Vector2.up * jumpForce;
+            myAnimator.SetBool("isJumping", playerIsJumping);
+        }
+        else if (Input.GetKeyDown(KeyCode.F) && isGrounded == false)
+        {
+            runSpeed = 20f;
+            myAnimator.SetBool("JumpSmash", true);
+
+        } else if (isGrounded == true && !Input.GetKeyDown(KeyCode.F))
+        {
+            runSpeed = 7f;
+            myAnimator.SetBool("JumpSmash", false);
         }
     }
+
+    
 
     private void flipSprite()
     {

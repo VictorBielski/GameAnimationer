@@ -231,7 +231,7 @@ MonoBehaviour:
   jumpSpeed: 28
   dashSpeed: 7
   slideTimer: 0
-  slideTimerMax: 1.5
+  slideTimerMax: 0.68
   groundCheck: {fileID: 542487000}
   checkRadius: 0.5
   whatIsGround:
