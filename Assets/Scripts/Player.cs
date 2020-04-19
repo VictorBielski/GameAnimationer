@@ -96,14 +96,20 @@ public class Player : MonoBehaviour
             runSpeed = 20f;
             myAnimator.SetBool("JumpSmash", true);
 
-        } else if (isGrounded == true && !Input.GetKeyDown(KeyCode.F))
+        } else if (isGrounded == true)
         {
             runSpeed = 7f;
             myAnimator.SetBool("JumpSmash", false);
         }
     }
 
-    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Coins"))
+        {
+            Destroy(other.gameObject);
+        }
+    }
 
     private void flipSprite()
     {
