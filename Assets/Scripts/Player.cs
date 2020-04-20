@@ -28,6 +28,14 @@ public class Player : MonoBehaviour
     bool isGrounded;
     public Transform groundCheck;
 
+    //variabler til attack
+    public float attackTime;
+    public float startTimeAttack;
+
+    public Transform attackLocation;
+    public float attackRange;
+    public LayerMask enemies;
+
 
     public float checkRadius;
     public LayerMask whatIsGround;
@@ -57,6 +65,7 @@ public class Player : MonoBehaviour
         flipSprite();
         Jump();
         dashSlide();
+        attackOne();
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
     }
@@ -145,4 +154,28 @@ public class Player : MonoBehaviour
             }
 
         }
+
+    private void attackOne()
+    {
+        if (attackTime <= 0)
+        {
+            if (Input.GetButton("Fire1"))
+            {
+                myAnimator.SetBool("isAttackingOne", true);
+                Collider2D[] damage = Physics2D.OverlapCircleAll(attackLocation.position, attackRange, enemies);
+
+                for (int i = 0; i < damage.Length; i++)
+                {
+                    Destroy(damage[i].gameObject);
+                }
+            }
+            attackTime = startTimeAttack;
+        }
+        else
+        {
+            attackTime -= Time.deltaTime;
+            myAnimator.SetBool("isAttackingOne", false);
+        }
+    }
+
     }
