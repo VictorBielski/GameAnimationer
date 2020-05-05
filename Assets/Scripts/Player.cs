@@ -28,6 +28,10 @@ public class Player : MonoBehaviour
     bool isGrounded;
     public Transform groundCheck;
 
+    //
+    public float currenthealth = 10;
+    public float maxhealth = 10;
+
     //variabler til attack
     public float attackTime;
     public float startTimeAttack;
