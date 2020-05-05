@@ -17,7 +17,7 @@ TagManager:
   - Ground
   - CoinScore
   - Enemy
-  - 
+  - Boss
   - 
   - 
   - 
@@ -42,11 +42,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: CoinScore
-    uniqueID: 516834099
+  - name: Boss
+    uniqueID: 1464559637
     locked: 0
   - name: Player
     uniqueID: 2464749539
+    locked: 0
+  - name: CoinScore
+    uniqueID: 516834099
     locked: 0
   - name: Foreground
     uniqueID: 3081587863
