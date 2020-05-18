@@ -1,15 +1,16 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 
+#pragma warning disable 618
 namespace UnityStandardAssets.Utility
 {
     public class SimpleActivatorMenu : MonoBehaviour
     {
-        //// change GUIText to TEXT
+        // An incredibly simple menu which, when given references
+        // to gameobjects in the scene
         public Text camSwitchButton;
-
-
         public GameObject[] objects;
 
 

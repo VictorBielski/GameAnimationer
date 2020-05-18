@@ -12,9 +12,7 @@ public class Player : MonoBehaviour
     // timer til dash/slider
     [SerializeField] float slideTimer = 0f;
     // max timer til dash/slider
-    [SerializeField] float slideTimerMax = 0.2f;
-
- 
+    [SerializeField] float slideTimerMax = 0f;
 
     Rigidbody2D myRigidbody;
     Animator myAnimator;
@@ -28,10 +26,6 @@ public class Player : MonoBehaviour
     bool isGrounded;
     public Transform groundCheck;
 
-    //
-    public float currenthealth = 10;
-    public float maxhealth = 10;
-
     //variabler til attack
     public float attackTime;
     public float startTimeAttack;
@@ -44,9 +38,6 @@ public class Player : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsGround;
     public float jumpForce;
-
-    // Jump-smash
-    public bool gravitySwitch;
 
     // Extra jumps
     private int extraJumps;
@@ -87,23 +78,22 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         bool playerIsJumping = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
+
+        // if grounded = no jump
         if (isGrounded == true)
         {
             extraJumps = extraJumpsValue;
             myAnimator.SetBool("isJumping", false);
         }
 
+        // double jumping
         if (Input.GetKeyDown(KeyCode.Space) && extraJumps > 0)
         {
             myAnimator.SetBool("isJumping", playerIsJumping);
             myRigidbody.velocity = Vector2.up * jumpForce;
             extraJumps--;
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isGrounded == true)
-        {
-            myRigidbody.velocity = Vector2.up * jumpForce;
-            myAnimator.SetBool("isJumping", playerIsJumping);
-        }
+        // jump-smash / jump-slide
         else if (Input.GetKeyDown(KeyCode.F) && isGrounded == false)
         {
             runSpeed = 20f;
@@ -116,6 +106,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // coin counter
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.gameObject.CompareTag("Coins"))
@@ -124,6 +115,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // flipping playermodel sprite in the direction you are moving
     private void flipSprite()
     {
         bool playerHasHoriSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
@@ -134,31 +126,33 @@ public class Player : MonoBehaviour
         }
     }
 
+    // slide/dash method
     private void dashSlide()
     {
+        // "Slide" is a self made "button" with crossplatforminputmanager
         if (Input.GetButtonDown("Slide") && !sliding)
         {
+            // starting slide and timer
             slideTimer = 0f;
-
             myAnimator.SetBool("isSliding", true);
-
-
             sliding = true;
         }
-            if(sliding)
-            {
-                slideTimer += Time.deltaTime;
 
-                if(slideTimer > slideTimerMax)
+        if(sliding)
+         {
+           // setting slideTimer to the complete time in seconds since last frame
+           slideTimer += Time.deltaTime;
+
+            // setting sliding false if slideTimer is more than slideTimerMax
+            if (slideTimer > slideTimerMax)
                 {
                     sliding = false;
-
                     myAnimator.SetBool("isSliding", false);
                 }
             }
-
         }
 
+    // attack method
     private void attackOne()
     {
         if (attackTime <= 0)
